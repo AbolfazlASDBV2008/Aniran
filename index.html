@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aniran | جستجوگر انیمه هوشمند</title>
     
+    <link rel="icon" href="/logo.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,11 +74,12 @@
         @keyframes page-out { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(15px); } }
 
         .result-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
         .result-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             box-shadow: 0 10px 30px -10px color-mix(in srgb, var(--accent-primary) 20%, transparent);
+            border-color: var(--accent-primary);
         }
         .result-card .card-img-container {
             position: relative;
@@ -139,19 +141,42 @@
             align-self: flex-start;
         }
         
-        .video-thumbnail-list {
-            display: flex;
-            overflow-x: auto;
-            gap: 1rem;
-            padding-bottom: 1rem;
+        .tab-nav-button {
+            border-bottom: 3px solid transparent;
+            color: var(--text-secondary);
+            transition: color 0.3s ease, border-color 0.3s ease;
         }
-        .video-thumbnail {
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: border-color 0.3s ease;
+        .tab-nav-button:hover {
+            color: var(--text-primary);
         }
-        .video-thumbnail.active {
+        .tab-nav-button.active {
+            color: var(--accent-primary);
             border-color: var(--accent-primary);
+        }
+        .tab-content {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .icon-button {
+            background-color: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        .icon-button:hover {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            transform: scale(1.05);
+        }
+        .icon-button svg {
+            transition: transform 0.3s ease;
+        }
+        .icon-button:hover svg {
+            transform: rotate(90deg);
         }
 
     </style>
@@ -203,11 +228,11 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
                             <span>برترین‌های MAL</span>
                         </button>
-                        <hr class="border-color !my-2">
-                        <button id="api-key-btn" class="w-full flex items-center gap-3 text-sm px-3 py-2 rounded-md hover:bg-tertiary transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" /></svg>
-                            <span id="api-key-btn-text">تنظیم API</span>
+                        <button id="telegram-bot-btn" class="w-full flex items-center gap-3 text-sm px-3 py-2 rounded-md hover:bg-tertiary transition-colors text-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.428A1 1 0 0010 16.57l5.621.803a1 1 0 001.169-1.409l-7-14z"></path></svg>
+                            <span>ورود به ربات</span>
                         </button>
+                        <hr class="border-color !my-2">
                         <div class="flex justify-between items-center px-3 py-2">
                             <span class="text-sm flex items-center gap-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>
@@ -237,7 +262,7 @@
                 </div>
             </form>
             <div class="text-center mt-6">
-                <button id="smart-suggest-btn" class="gemini-button text-white font-bold py-3 px-6 rounded-full" disabled>
+                <button id="smart-suggest-btn" class="gemini-button text-white font-bold py-3 px-6 rounded-full">
                     ✨ پیشنهاد مفهومی
                 </button>
             </div>
@@ -246,9 +271,9 @@
         <div id="list-page" class="hidden">
             <h2 id="list-title" class="text-3xl font-bold text-center my-8"></h2>
             <div id="season-nav" class="hidden justify-center items-center gap-4 my-6">
-                <button id="prev-season-btn" class="accent-primary-bg text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition-opacity">&lt; فصل قبل</button>
+                <button id="prev-season-btn" class="accent-primary-bg text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition-opacity">< فصل قبل</button>
                 <span id="season-display" class="font-bold text-xl"></span>
-                <button id="next-season-btn" class="accent-primary-bg text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition-opacity">فصل بعد &gt;</button>
+                <button id="next-season-btn" class="accent-primary-bg text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition-opacity">فصل بعد ></button>
             </div>
         </div>
         
@@ -264,9 +289,26 @@
     
     <div id="modal-container"></div>
 
+    <footer class="text-center py-8 mt-12 border-t border-color">
+        <p class="text-secondary text-sm mb-4">
+            توسعه دهنده : Abolfazl_ASDBV
+        </p>
+        <div class="flex justify-center gap-6">
+            <a href="https://t.me/anime_sub_Persian" target="_blank" rel="noopener noreferrer" title="Telegram"
+               class="text-secondary hover:accent-primary-text transition-colors">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" role="img" aria-label="Telegram icon">
+                    <path d="M11.999 0C5.372 0 0 5.373 0 12s5.372 12 11.999 12C18.626 24 24 18.627 24 12S18.626 0 11.999 0zM18.26 8.13l-2.73 12.04c-.15.66-.54 1.25-1.1 1.25-.3 0-.58-.12-.82-.36l-3.37-3.11-1.63 1.57c-.18.17-.4.29-.63.29-.3 0-.58-.12-.8-.34l-.45-.43c-.4-.38-.63-1.12-.2-1.6l2.9-4.3 6.03-5.52c.26-.24.06-.39-.22-.25l-7.3 4.54-3.5-1.09c-.6-.18-.9-.45-.9-.94 0-.4.2-.68.6-.85l14.28-5.57c.5-.2 1.02.1 1.2.63z"/>
+                </svg>
+            </a>
+            <a href="https://www.instagram.com/anime_wd20?igsh=dTA1dmNsYjhzcGx1" target="_blank" rel="noopener noreferrer" title="Instagram"
+               class="text-secondary hover:accent-secondary-text transition-colors">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" role="img" aria-label="Instagram icon">
+                    <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.784.297-1.459.717-2.126 1.384S.927 3.356.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.297.784.717 1.459 1.384 2.126.667.666 1.342 1.086 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.784-.297 1.459-.718 2.126-1.384.666-.667 1.086-1.342 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.277.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.148-.558-2.913-.297-.784-.718-1.459-1.384-2.126C20.644.927 19.969.507 19.185.21c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.163c3.203 0 3.585.012 4.85.07 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.265.07 1.646.07 4.85s-.012 3.585-.07 4.85c-.055 1.17-.249 1.805-.413 2.227-.217.562-.477.96-.896 1.382-.42.419-.819.679-1.381.896-.422.164-1.057.36-2.227.413-1.265.057-1.646.07-4.85.07s-3.585-.012-4.85-.07c-1.17-.055-1.805-.249-2.227-.413-.562-.217-.96-.477-1.382-.896-.419-.42-.679-.819-.896-1.381-.164-.422-.36-1.057-.413-2.227-.057-1.265-.07-1.646-.07-4.85s.012-3.585.07-4.85c.055-1.17.249 1.805.413 2.227.217.562.477.96.896-1.382.42-.419.819.679 1.381.896.422.164 1.057.36 2.227.413 1.265.057 1.646.07 4.85.07zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/>
+                </svg>
+            </a>
+        </div>
+    </footer>
     <script type="module">
-        const JIKAN_API_BASE = "https://api.jikan.moe/v4";
-
         const DOMElements = {
             mainPage: document.querySelector('main'),
             searchPage: document.getElementById('search-page'),
@@ -287,110 +329,126 @@
             prevSeasonBtn: document.getElementById('prev-season-btn'),
             nextSeasonBtn: document.getElementById('next-season-btn'),
             smartSuggestBtn: document.getElementById('smart-suggest-btn'),
-            apiKeyBtn: document.getElementById('api-key-btn'),
-            apiKeyBtnText: document.getElementById('api-key-btn-text'),
             menuToggleBtn: document.getElementById('menu-toggle-btn'),
             mainMenu: document.getElementById('main-menu'),
         };
 
         let isTransitioning = false;
-        const translationCache = new Map();
-        let navigationHistory = [];
         let currentSeasonState = { year: 0, season: '' };
         let searchDebounceTimeout;
         let latestSearchQuery = '';
         let currentAnimeData = null;
-        let geminiApiKey = null;
         let currentPage = 1;
         let currentListType = '';
 
         const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+        
+        function proxyImageUrl(url) {
+            const placeholder = 'https://placehold.co/400x600/1A2233/939CB0?text=بدون+عکس';
+            if (!url) {
+                return placeholder;
+            }
+            if (url.includes('placehold.co')) {
+                return url;
+            }
+            return `/.netlify/functions/image-proxy?url=${encodeURIComponent(url)}`;
+        }
 
-        // --- OFFLINE TRANSLATOR ---
         const offlineTranslator = {
             dictionary: {
-                // Genres
-                "Action": "اکشن", "Adventure": "ماجراجویی", "Comedy": "کمدی", "Drama": "درام", "Fantasy": "فانتزی", "Horror": "ترسناک", "Mystery": "رازآلود", "Romance": "عاشقانه", "Sci-Fi": "علمی تخیلی", "Slice of Life": "برشی از زندگی", "Sports": "ورزشی", "Supernatural": "ماوراء طبیعی", "Suspense": "دلهره آور", "Award Winning": "برنده جایزه",
-                // Themes
+                "Action": "اکشن", "Adventure": "ماجراجویی", "Comedy": "کمدی", "Drama": "درام", "Fantasy": "فانتزی", "Urban Fantasy": "فانتزی شهری", "Horror": "ترسناک", "Mystery": "رازآلود", "Romance": "عاشقانه", "Sci-Fi": "علمی تخیلی", "Slice of Life": "برشی از زندگی", "Sports": "ورزشی", "Supernatural": "ماوراء طبیعی", "Suspense": "دلهره آور", "Award Winning": "برنده جایزه",
                 "Gourmet": "خوش خوراک", "Ecchi": "ایچی", "Erotica": "اروتیک", "Hentai": "هنتای", "Adult Cast": "بازیگران بزرگسال", "Anthropomorphic": "انسان‌انگاری", "CGDCT": "دختران ناز کارهای ناز انجام می‌دهند", "Childcare": "مراقبت از کودک", "Combat Sports": "ورزش‌های رزمی", "Crossdressing": "مبدل‌پوشی", "Delinquents": "بزهکاران", "Detective": "کارآگاهی", "Educational": "آموزشی", "Gag Humor": "طنز بی‌معنی", "Gore": "خونین", "Harem": "حرمسرا", "High Stakes Game": "بازی پرخطر", "Historical": "تاریخی", "Idols (Female)": "آیدل (زن)", "Idols (Male)": "آیدل (مرد)", "Isekai": "ایسکای", "Iyashikei": "آرامش‌بخش", "Love Polygon": "چندضلعی عشقی", "Magical Sex-Shift": "تغییر جنسیت جادویی", "Mahou Shoujo": "دختر جادویی", "Martial Arts": "هنرهای رزمی", "Mecha": "مکا", "Medical": "پزشکی", "Military": "نظامی", "Music": "موسیقی", "Mythology": "اساطیری", "Organized Crime": "جرایم سازمان‌یافته", "Otaku Culture": "فرهنگ اوتاکو", "Parody": "نقیضه", "Performing Arts": "هنرهای نمایشی", "Pets": "حیوانات خانگی", "Psychological": "روانشناختی", "Racing": "مسابقه‌ای", "Reincarnation": "تناسخ", "Reverse Harem": "حرمسرای معکوس", "Romantic Subtext": "معنای ضمنی عاشقانه", "Samurai": "سامورایی", "School": "مدرسه‌ای", "Showbiz": "شوبیز", "Space": "فضایی", "Strategy Game": "بازی استراتژیک", "Super Power": "قدرت فوق‌العاده", "Survival": "بقا", "Team Sports": "ورزش تیمی", "Time Travel": "سفر در زمان", "Vampire": "خون‌آشام", "Video Game": "بازی ویدیویی", "Visual Arts": "هنرهای تجسمی", "Workplace": "محیط کار", "Avant Garde": "آوانگارد",
-                // Demographics
                 "Josei": "جوسِی", "Kids": "کودکان", "Seinen": "سینن", "Shoujo": "شوجو", "Shounen": "شونن", "Boys Love": "عشق پسران", "Girls Love": "عشق دختران",
-                // Status
                 "Currently Airing": "در حال پخش", "Finished Airing": "پخش تمام شده", "Not yet aired": "هنوز پخش نشده",
-                // Types
-                "TV": "تلویزیونی", "Movie": "سینمایی", "OVA": "او وی ای", "Special": "ویژه", "ONA": "اونا",
-                // Seasons
+                "TV": "تلویزیونی", "Movie": "سینمایی", "OVA": "او وی ای", "Special": "ویژه", "ONA": "او ان ای", 
                 "winter": "زمستان", "spring": "بهار", "summer": "تابستان", "fall": "پاییز",
-                // Ratings
                 "G - All Ages": "G - برای تمام سنین", "PG - Children": "PG - برای کودکان", "PG-13 - Teens 13 or older": "PG-13 - برای نوجوانان ۱۳ سال به بالا", "R - 17+ (violence & profanity)": "R - 17+ (خشونت و ناسزا)", "R+ - Mild Nudity": "R+ - برهنگی خفیف", "Rx - Hentai": "Rx - هنتای",
-                // Adaptation Sources
                 "Manga": "مانگا", "Original": "اورجینال", "Light novel": "لایت ناول", "Game": "بازی", "Visual novel": "ویژوال ناول", "Web manga": "وب مانگا", "Novel": "رمان", "4-koma manga": "مانگا ۴ پنلی", "Book": "کتاب", "Picture book": "کتاب مصور", "Card game": "بازی کارتی", "Web novel": "وب ناول", "Other": "غیره", "Music": "موسیقی", "Radio": "رادیو",
-                // Common Titles & Synopses for demonstration
-                "No synopsis available.": "خلاصه داستان موجود نیست.",
-                "Death Note": "دفترچه مرگ", "A brilliant high school student who discovers a supernatural notebook that allows him to kill anyone by writing their name in it.": "یک دانش‌آموز دبیرستانی نابغه یک دفترچه فراطبیعی پیدا می‌کند که به او اجازه می‌دهد با نوشتن نام هر کسی در آن، او را بکشد.",
-                "Attack on Titan": "حمله به تایتان", "After his hometown is destroyed and his mother is killed, young Eren Jaeger vows to cleanse the earth of the giant humanoid Titans that have brought humanity to the brink of extinction.": "پس از نابودی زادگاهش و کشته شدن مادرش، ارن یگر جوان قسم می‌خورد که زمین را از تایتان‌های غول‌پیکر انسان‌نما که بشریت را تا مرز انقراض کشانده‌اند، پاک کند.",
-                "Fullmetal Alchemist: Brotherhood": "کیمیاگر تمام‌فلزی: برادری", "Two brothers search for the Philosopher's Stone after an attempt to revive their deceased mother goes awry and leaves them in damaged physical forms.": "دو برادر پس از اینکه تلاش برای احیای مادر مرحومشان با شکست مواجه می‌شود و آن‌ها را با بدن‌های آسیب‌دیده رها می‌کند، به دنبال سنگ فلاسفه می‌گردند.",
-                "Naruto": "ناروتو", "Naruto Uzumaki, a mischievous adolescent ninja, struggles as he searches for recognition and dreams of becoming the Hokage, the village's leader and strongest ninja.": "ناروتو اوزوماکی، یک نینجای نوجوان بازیگوش، در حالی که به دنبال به رسمیت شناخته شدن است و رویای هوکاگه شدن، یعنی رهبر و قوی‌ترین نینجای دهکده، را در سر می‌پروراند، تلاش می‌کند.",
-                "One Piece": "وان پیس", "Follows the adventures of Monkey D. Luffy and his pirate crew in order to find the greatest treasure ever left by the legendary Pirate, Gold Roger. The famous mystery treasure named \"One Piece\".": "ماجراهای مانکی دی. لوفی و خدمه دزدان دریایی او را دنبال می‌کند تا بزرگترین گنجی را که توسط دزد دریایی افسانه‌ای، گل دی. راجر، به جا مانده است، پیدا کنند. گنج اسرارآمیز معروفی به نام «وان پیس».",
-                "Owarimonogatari": "اواری‌مونوگاتاری", "Apparitions, oddities, and gods continue to manifest around Koyomi Araragi and his close-knit group of friends: Tsubasa Hanekawa, the group's modest genius; Shinobu Oshino, the resident doughnut-loving vampire; athletic deviant Suruga Kanbaru; bite-happy spirit Mayoi Hachikuji; Koyomi's cutesy admirer Nadeko Sengoku; and Hitagi Senjougahara, the standoffish yet caring girlfriend. As Koyomi tries to balance his relationships with each of them, he is forced to confront the darkness that surrounds them. With graduation looming over him, Koyomi must quickly decide what he will do and who he will save.": "اشباح، شگفتی‌ها و خدایان همچنان در اطراف کویومی آراراگی و گروه دوستان صمیمی‌اش ظاهر می‌شوند: سوباسا هانکاوا، نابغه متواضع گروه؛ شینوبو اوشینو، خون‌آشام عاشق دونات؛ سوروگا کانبارو، ورزشکار منحرف؛ مایوی هاچیکوجی، روح سرگردان؛ نادکو سنگوکو، تحسین‌کننده بامزه کویومی؛ و هیتاگی سنجوگاهارا، دوست‌دختر سرد اما مهربان او. در حالی که کویومی تلاش می‌کند تا روابط خود را با هر یک از آنها متعادل کند، مجبور می‌شود با تاریکی‌ای که آنها را احاطه کرده است، روبرو شود. با نزدیک شدن به فارغ‌التحصیلی، کویومی باید به سرعت تصمیم بگیرد که چه کاری انجام خواهد داد و چه کسی را نجات خواهد داد."
             },
             translate(text) {
                 if (!text) return text;
                 const trimmedText = text.trim();
-                // First, check for an exact match (good for ratings and specific phrases)
                 if (this.dictionary[trimmedText]) {
                     return this.dictionary[trimmedText];
                 }
-                // If no exact match, try cleaning the text (good for titles with "(TV)" etc.)
                 const cleanText = trimmedText.replace(/\s*\([^)]*\)$/, '').replace(/\[Written by MAL Rewrite\]/g, '').trim();
                 return this.dictionary[cleanText] || text;
             }
         };
 
         const APIManager = {
-            async fetchJikan(endpoint) {
+            async fetchJikan(endpoint, forceRefresh = false) {
                 try {
-                    const response = await fetch(`${JIKAN_API_BASE}/${endpoint}`);
-                    await delay(350); // Rate limiting
-                    if (!response.ok) {
-                        // START: Added specific error handling for 429 status
-                        if (response.status === 429) {
-                            throw new Error(`تعداد درخواست‌ها از سرور انیمه بیش از حد مجاز است. لطفاً چند لحظه صبر کرده و دوباره امتحان کنید.`);
+                    let apiUrl = '';
+                    
+                    const detailMatch = endpoint.match(/^anime\/(\d+)\/full$/);
+                    if (detailMatch && detailMatch[1]) {
+                        apiUrl = `/.netlify/functions/get-anime-details?id=${detailMatch[1]}`;
+                        if (forceRefresh) {
+                            apiUrl += '&refresh=true';
                         }
-                        // END: Added specific error handling for 429 status
+                    } else {
+                        apiUrl = `/.netlify/functions/jikan-proxy?endpoint=${encodeURIComponent(endpoint)}`;
+                    }
+
+                    const response = await fetch(apiUrl);
+                    
+                    if (!response.ok) {
                         const errorData = await response.json().catch(() => ({}));
-                        throw new Error(`خطا در ارتباط با سرور انیمه (${response.status}): ${errorData.message || response.statusText}`);
+                        const errorMessage = errorData.message || errorData.error || response.statusText;
+                        // --- *** اصلاح: پرتاب کردن خطای 404/500 *** ---
+                        // این خطا در catch بلاکِ UIManager.showDetailsPage مدیریت خواهد شد
+                        throw new Error(`خطا در ارتباط با سرور (${response.status}): Jikan API error: ${errorMessage}`);
                     }
                     return await response.json();
                 } catch (error) {
-                    console.error("Jikan API fetch error:", error);
-                    throw new Error(error.message || "خطا در دریافت اطلاعات از سرور انیمه.");
+                    console.error("API proxy error:", error);
+                    // خطای ترجمه ناموفق از بک‌اند (اگر وجود داشته باشد)
+                    if (error.message.includes("Translation failed")) {
+                        throw new Error("ترجمه ناموفق بود. لطفاً لاگ Netlify را بررسی کنید.");
+                    }
+                    // خطای Jikan (404/500)
+                    if (error.message.includes("Jikan API error")) {
+                        throw error; // خطا را به showDetailsPage ارسال کن
+                    }
+                    throw new Error(error.message || "خطا در دریافت اطلاعات.");
                 }
             },
             
             async callGemini(prompt, isJson = false) {
-                if (!geminiApiKey) throw new Error("کلید API جمنای تنظیم نشده است. لطفاً از منوی تنظیمات، کلید خود را وارد کنید.");
                 try {
                     const payload = { 
                         contents: [{ role: "user", parts: [{ text: prompt }] }],
                         ...(isJson && { generationConfig: { responseMimeType: "application/json" } })
                     };
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
+                    
+                    const apiUrl = `/.netlify/functions/gemini-proxy`;
+                    
                     const response = await fetch(apiUrl, { 
                         method: 'POST', 
                         headers: { 'Content-Type': 'application/json' }, 
-                        body: JSON.stringify(payload) 
+                        body: JSON.stringify(payload)
                     });
 
                     if (!response.ok) {
                         const errorData = await response.json().catch(() => ({}));
-                        if (response.status === 400) throw new Error(`درخواست نامعتبر. ممکن است کلید API مشکل داشته باشد. (${errorData?.error?.message || ''})`);
-                        if (response.status === 401 || response.status === 403) throw new Error(`خطای احراز هویت. کلید API نامعتبر است یا دسترسی لازم را ندارد.`);
-                        if (response.status === 429) throw new Error(`تعداد درخواست‌ها از حد مجاز فراتر رفته است (429).`);
+                        if (errorData.error && errorData.error.message) {
+                            if (response.status === 429 || errorData.error.message.includes("Resource Exhausted")) {
+                                throw new Error("Resource Exhausted (429)");
+                            }
+                            throw new Error(`خطا از سرور هوش مصنوعی: ${errorData.error.message}`);
+                        }
                         throw new Error(`خطا در ارتباط با سرور هوش مصنوعی: (${response.status})`);
                     }
                     
                     const result = await response.json();
+                    
+                    const blockReason = result.candidates?.[0]?.finishReason === 'SAFETY' || result.promptFeedback?.blockReason;
+                    if (blockReason) {
+                        console.warn("Gemini response blocked:", result);
+                        throw new Error("PROHIBITED_CONTENT");
+                    }
+
                     const part = result.candidates?.[0]?.content?.parts?.[0];
                     if (part?.text) {
                         try {
@@ -400,7 +458,6 @@
                             throw new Error("پاسخ دریافت شده از هوش مصنوعی در فرمت مورد انتظار (JSON) نبود.");
                         }
                     } else {
-                        if (result.candidates?.[0]?.finishReason === 'SAFETY') throw new Error("پاسخ به دلیل محدودیت‌های ایمنی مسدود شد.");
                         throw new Error("پاسخ غیرمنتظره یا خالی از سرویس هوش مصنوعی دریافت شد.");
                     }
                 } catch (error) {
@@ -408,53 +465,22 @@
                     throw error;
                 }
             },
-
-            async validateApiKey(key) {
-                if (!key) return false;
-                try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
-                    return response.ok && Array.isArray((await response.json()).models);
-                } catch (error) {
-                    console.error("API Key validation failed:", error);
-                    return false;
-                }
-            },
-
-            async batchTranslate(texts) {
-                const uniqueTexts = [...new Set(texts.filter(t => t && !translationCache.has(t)))];
-                if (uniqueTexts.length === 0) return;
-
-                const prompt = `Translate the following list of English phrases to Persian. Return a JSON object where keys are the original English phrases and values are their Persian translations. Provide ONLY the JSON object.\nPhrases: ${JSON.stringify(uniqueTexts)}`;
-                
-                try {
-                    const translatedJson = await this.callGemini(prompt, true);
-                    for (const [key, value] of Object.entries(translatedJson)) {
-                        const cleanedValue = typeof value === 'string' ? value.replace(/["'«»]/g, "").trim() : value;
-                        translationCache.set(key, cleanedValue);
-                    }
-                } catch (error) {
-                    console.warn("Gemini batch translation failed, will use offline for untranslated items.", error.message);
-                }
-            },
             
             async translateToEnglish(text) {
                 if (!text) return text;
-                if (!geminiApiKey) {
-                    throw new Error("جستجوی فارسی نیازمند تنظیم کلید API جمنای است. لطفاً از منو، کلید خود را وارد کنید.");
-                }
                 
                 const cacheKey = `en_${text}`;
-                if (translationCache.has(cacheKey)) return translationCache.get(cacheKey);
+                if (sessionStorage.getItem(cacheKey)) return sessionStorage.getItem(cacheKey);
 
                 try {
                     const prompt = `Translate the following Persian phrase to its most common English title for anime searching. Respond with only the English translation. Phrase: "${text}"`;
                     const translation = await this.callGemini(prompt);
                     const cleanedTranslation = translation.replace(/["'«»]/g, "").trim();
-                    if (cleanedTranslation) translationCache.set(cacheKey, cleanedTranslation);
+                    if (cleanedTranslation) sessionStorage.setItem(cacheKey, cleanedTranslation);
                     return cleanedTranslation || text;
                 } catch (error) {
                     console.error("Translation Error (to English):", error);
-                    throw new Error(`ترجمه عبارت "${text}" با خطا مواجه شد. لطفاً اتصال اینترنت یا کلید API خود را بررسی کنید.`);
+                    throw new Error(App.getFriendlyErrorMessage(error));
                 }
             }
         };
@@ -494,7 +520,7 @@
 
                 setTimeout(() => {
                     modalWrapper.classList.add('translate-x-full');
-                    setTimeout(() => this.close('notification-modal'), 300);
+                    setTimeout(() => this.close('notification-modal'), 3000);
                 }, 3000);
             }
         };
@@ -523,11 +549,12 @@
                 results.forEach(item => {
                     const node = item.node || item;
                     const card = document.createElement('div');
-                    card.className = 'result-card bg-tertiary rounded-lg overflow-hidden shadow-lg cursor-pointer group';
+                    card.className = 'result-card bg-tertiary rounded-lg overflow-hidden shadow-lg cursor-pointer group border border-transparent';
                     card.dataset.id = node.mal_id;
+                    
                     card.innerHTML = `
                         <div class="card-img-container rounded-lg">
-                            <img src="${node.images.webp.large_image_url || 'https://placehold.co/400x600/1A2233/939CB0?text=بدون+عکس'}" alt="${node.title}" class="card-img w-full h-auto aspect-[2/3] object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x600/1A2233/939CB0?text=بدون+عکس';">
+                            <img src="${proxyImageUrl(node.images.webp.large_image_url)}" alt="${node.title}" class="card-img w-full h-auto aspect-[2/3] object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x600/1A2233/939CB0?text=بدون+عکس';">
                             <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
                                 <h3 class="font-bold text-sm text-white truncate group-hover:accent-primary-text transition-colors" title="${node.title}">${node.title}</h3>
                                 <div class="text-xs text-gray-300 flex justify-between items-center mt-1">
@@ -551,25 +578,51 @@
                     DOMElements.showMoreContainer.appendChild(showMoreBtn);
                 }
             },
+            
             showMainPage() {
-                if (isTransitioning) return; isTransitioning = true;
-                DOMElements.detailsPage.classList.add('page-exit-active');
-                ModalManager.closeAll();
-                setTimeout(() => {
-                    DOMElements.detailsPage.classList.add('hidden'); DOMElements.detailsPage.classList.remove('page-exit-active');
-                    DOMElements.mainPage.classList.remove('hidden'); DOMElements.mainPage.classList.add('page-enter-active');
-                    DOMElements.detailsPage.innerHTML = ''; isTransitioning = false;
-                }, 400);
+                if (!DOMElements.detailsPage.classList.contains('hidden')) {
+                    if (isTransitioning) return; 
+                    isTransitioning = true;
+                    DOMElements.detailsPage.classList.add('page-exit-active');
+                    ModalManager.closeAll();
+                    
+                    setTimeout(() => {
+                        DOMElements.detailsPage.classList.add('hidden'); 
+                        DOMElements.detailsPage.classList.remove('page-exit-active');
+                        DOMElements.mainPage.classList.remove('hidden'); 
+                        DOMElements.mainPage.classList.add('page-enter-active');
+                        DOMElements.detailsPage.innerHTML = ''; 
+                        isTransitioning = false;
+                    }, 400);
+                } else {
+                    DOMElements.mainPage.classList.remove('hidden');
+                }
             },
-            async showDetailsPage(id) {
+            
+            async showDetailsPage(id, forceRefresh = false) {
                 if (isTransitioning) return; isTransitioning = true;
                 DOMElements.mainPage.classList.add('hidden');
                 DOMElements.detailsPage.innerHTML = `<div class="flex justify-center items-center min-h-screen"><div class="loader"></div></div>`;
-                DOMElements.detailsPage.classList.remove('hidden'); DOMElements.detailsPage.classList.add('page-enter-active');
+                DOMElements.detailsPage.classList.remove('hidden');
+                DOMElements.detailsPage.classList.add('page-enter-active');
                 window.scrollTo(0, 0);
                 
                 try {
-                    const result = await APIManager.fetchJikan(`anime/${id}/full`);
+                    const result = await APIManager.fetchJikan(`anime/${id}/full`, forceRefresh);
+                    
+                    // --- *** اصلاح: مدیریت هوشمند اعلان ترجمه *** ---
+                    if (result.translationError) {
+                        if (result.translationError === 'rate_limit') {
+                            ModalManager.showNotification("ظرفیت API هوش مصنوعی تکمیل است. لطفاً بعداً دوباره امتحان کنید.", "error");
+                        } else { // 'general_failure'
+                            ModalManager.showNotification("ترجمه با خطا مواجه شد.", "error");
+                        }
+                    } else if (forceRefresh && result.source === 'api-fresh') {
+                        // اگر رفرش اجباری موفق بود، یک تایید نشان بده
+                        ModalManager.showNotification("ترجمه مجدد با موفقیت انجام شد.", "success");
+                    }
+                    // --- *** پایان اصلاح *** ---
+
                     currentAnimeData = result.data;
                     const data = currentAnimeData;
                     
@@ -579,42 +632,66 @@
                         <div class="relative">
                             <div class="absolute top-0 left-0 w-full h-[40vh] md:h-[50vh] overflow-hidden">
                                 <div class="absolute inset-0 bg-gradient-to-t from-bg-primary to-bg-primary/20 z-10"></div>
-                                <img src="${data.images.webp.large_image_url || ''}" class="w-full h-full object-cover object-center opacity-30" alt="Backdrop">
+                                <img src="${proxyImageUrl(data.images.webp.large_image_url)}" class="w-full h-full object-cover object-center opacity-30" alt="Backdrop">
                             </div>
-                            <button id="back-button" class="fixed top-6 right-6 bg-secondary/70 backdrop-blur-sm hover:bg-tertiary font-bold p-3 rounded-full z-20 shadow-lg transition-colors">&larr;</button>
+                            <button id="back-button" class="fixed top-6 right-6 bg-secondary/70 backdrop-blur-sm hover:bg-tertiary font-bold p-3 rounded-full z-20 shadow-lg transition-colors">←</button>
                             <div class="relative z-10 container mx-auto p-4 md:p-8 max-w-7xl pt-[20vh] md:pt-[25vh]">
                                 <div class="flex flex-col md:flex-row md:gap-8 lg:gap-12">
+                                    
                                     <div class="w-full md:w-1/3 lg:w-1/4 flex-shrink-0 text-center">
-                                        <img src="${data.images.webp.large_image_url || 'https://placehold.co/400x600/1A2233/939CB0?text=بدون+عکس'}" alt="Poster" class="w-full max-w-[250px] mx-auto rounded-xl shadow-2xl shadow-black/50 border-4 border-tertiary">
+                                        <img src="${proxyImageUrl(data.images.webp.large_image_url)}" alt="Poster" class="w-full max-w-[250px] mx-auto rounded-xl shadow-2xl shadow-black/50 border-4 border-tertiary" onerror="this.onerror=null;this.src='https://placehold.co/400x600/1A2233/939CB0?text=بدون+عکس';">
                                         <div class="mt-4">
-                                            <h2 id="persian-title" class="text-2xl lg:text-3xl font-black animated-gradient-text">${data.title_english || data.title}</h2>
+                                            <h2 id="persian-title" class="text-2xl lg:text-3xl font-black animated-gradient-text">${data.persian_title}</h2>
                                             <p class="text-sm text-secondary mt-1">${data.title}</p>
                                         </div>
                                         <div id="details-box" class="bg-tertiary p-4 rounded-lg text-sm mt-6 text-right"></div>
                                     </div>
+
                                     <div class="w-full md:w-2/3 lg:w-3/4 mt-8 md:mt-0">
-                                        <div id="latest-episode-section" class="mb-6"></div>
                                         <div class="flex flex-wrap gap-4 mb-6">
                                             <div class="flex items-center gap-2 bg-tertiary p-2 px-4 rounded-full"><span class="font-bold text-yellow-400 text-xl">${data.score || 'N/A'}</span><span class="text-xs text-secondary">امتیاز</span></div>
                                             <div class="flex items-center gap-2 bg-tertiary p-2 px-4 rounded-full"><span class="font-bold text-xl">#${data.rank?.toLocaleString() || 'N/A'}</span><span class="text-xs text-secondary">رتبه</span></div>
                                             <div class="flex items-center gap-2 bg-tertiary p-2 px-4 rounded-full"><span class="font-bold text-xl">${data.members?.toLocaleString() || 'N/A'}</span><span class="text-xs text-secondary">عضو</span></div>
                                         </div>
-                                        <div class="mb-6"><h3 class="font-bold text-xl mb-3">ژانرها</h3><div id="genre-container" class="flex flex-wrap gap-2">${allGenres.map(g => `<span class="bg-tertiary text-sm font-semibold px-3 py-1 rounded-full">${g.name}</span>`).join('')}</div></div>
-                                        <div class="mb-6">
-                                            <div class="flex justify-between items-center mb-3">
-                                                <h3 class="font-bold text-xl">خلاصه داستان</h3>
-                                                <div class="flex gap-2">
-                                                    <button id="smart-analysis-btn" class="gemini-button text-white text-xs font-bold py-2 px-3 rounded-full" disabled>✨ تحلیل هوشمند</button>
-                                                    <button id="find-similar-btn" class="bg-tertiary border border-color text-xs font-bold py-2 px-3 rounded-full hover:bg-secondary" disabled>✨ یافتن مشابه</button>
-                                                </div>
-                                            </div>
-                                            <p id="synopsis-text" class="text-secondary text-base leading-relaxed whitespace-pre-wrap">${data.synopsis || 'خلاصه داستان موجود نیست.'}</p>
+
+                                        <div class="border-b border-color flex space-x-1 sm:space-x-4 overflow-x-auto mb-6">
+                                            <button class="tab-nav-button whitespace-nowrap py-3 px-2 sm:px-4 font-bold active" data-tab-target="#tab-content-synopsis">خلاصه داستان</button>
+                                            <button class="tab-nav-button whitespace-nowrap py-3 px-2 sm:px-4 font-bold" data-tab-target="#tab-content-characters">شخصیت‌ها</button>
+                                            <button class="tab-nav-button whitespace-nowrap py-3 px-2 sm:px-4 font-bold" data-tab-target="#tab-content-trailers">تریلرها</button>
+                                            <button class="tab-nav-button whitespace-nowrap py-3 px-2 sm:px-4 font-bold" data-tab-target="#tab-content-music">موسیقی‌ها</button>
+                                            <button class="tab-nav-button whitespace-nowrap py-3 px-2 sm:px-4 font-bold" data-tab-target="#tab-content-related">مرتبط</button>
                                         </div>
-                                        <div id="subtitles-section" class="mb-6"></div>
-                                        <div id="relations-section" class="mb-6"></div>
-                                        <div id="videos-section" class="mb-6"></div>
-                                        <div id="characters-section" class="mb-6"></div>
-                                        <div id="recommendations-section"></div>
+
+                                        <div id="tab-content-synopsis" class="tab-content active">
+                                            <div id="latest-episode-section" class="mb-6"></div>
+                                            <div class="mb-6"><h3 class="font-bold text-xl mb-3">ژانرها</h3><div id="genre-container" class="flex flex-wrap gap-2">${allGenres.map(g => `<span class="bg-tertiary text-sm font-semibold px-3 py-1 rounded-full">${offlineTranslator.translate(g.name)}</span>`).join('')}</div></div>
+                                            <div class="mb-6">
+                                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3">
+                                                    <h3 class="font-bold text-xl mb-3 sm:mb-0">خلاصه داستان</h3>
+                                                    <div id="ai-actions-container" class="flex gap-2 flex-wrap">
+                                                        <button id="force-refresh-btn" class="icon-button text-xs font-bold p-2 rounded-full" title="اجبار به ترجمه مجدد">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m-15.357-2a8.001 8.001 0 0015.357 2m0 0H15" />
+                                                            </svg>
+                                                        </button>
+                                                        <button id="watch-order-btn" class="gemini-button text-white text-xs font-bold py-2 px-3 rounded-full hidden">📜 ترتیب تماشا</button>
+                                                        <button id="smart-analysis-btn" class="gemini-button text-white text-xs font-bold py-2 px-3 rounded-full">✨ تحلیل هوشمند</button>
+                                                        <button id="find-similar-btn" class="icon-button text-xs font-bold py-2 px-3 rounded-full">✨ یافتن مشابه</button>
+                                                    </div>
+                                                </div>
+                                                <p id="synopsis-text" class="text-secondary text-base leading-relaxed whitespace-pre-wrap">${data.persian_synopsis}</p>
+                                            </div>
+                                            <div id="subtitles-section" class="mb-6"></div>
+                                        </div>
+
+                                        <div id="tab-content-characters" class="tab-content hidden"></div>
+                                        <div id="tab-content-trailers" class="tab-content hidden"></div>
+                                        <div id="tab-content-music" class="tab-content hidden"></div>
+                                        <div id="tab-content-related" class="tab-content hidden space-y-8">
+                                            <div id="relations-section"></div>
+                                            <div id="recommendations-section"></div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -623,118 +700,32 @@
                     isTransitioning = false;
                     
                     this.renderDetailsBox(data);
-                    await this.triggerTranslations(data);
 
                     if (data.status === 'Currently Airing') this.renderLatestEpisode(id);
                     this.renderSubtitlesSection(data);
+                    this.renderWatchOrderButton(data);
                     this.renderRelations(data.relations);
                     this.renderVideos(id, data.trailer);
-                    
-                    // START: Staggered API calls to avoid rate limiting
+                    this.renderThemes(id);
+
                     await delay(400);
                     await this.renderCharacters(id);
 
                     await delay(400);
                     await this.renderRecommendations(id);
-                    // END: Staggered API calls
-
-                    App.updateAiFeatureVisibility();
-
-                    // START: Added translation check logic
-                    setTimeout(async () => {
-                        // اطمینان از اینکه کاربر هنوز در صفحه جزئیات است و داده‌ها مربوط به همین انیمه است
-                        if (document.getElementById('details-page').classList.contains('hidden') || !currentAnimeData || currentAnimeData.mal_id !== parseInt(id)) {
-                            return; // کاربر صفحه را ترک کرده، کاری انجام نده
-                        }
-
-                        const titleEl = document.getElementById('persian-title');
-                        const synopsisEl = document.getElementById('synopsis-text');
-
-                        // اگر عناصر وجود نداشتند، خارج شو
-                        if (!titleEl || !synopsisEl) return;
-
-                        const originalTitle = currentAnimeData.title_english || currentAnimeData.title;
-                        const originalSynopsis = currentAnimeData.synopsis || "No synopsis available.";
-                        
-                        const textsToRetry = [];
-
-                        // بررسی اینکه آیا متن عنوان هنوز به زبان اصلی است یا خیر
-                        if (titleEl.textContent.trim() === originalTitle.trim()) {
-                           textsToRetry.push(originalTitle);
-                        }
-
-                        // بررسی اینکه آیا متن خلاصه داستان هنوز به زبان اصلی است یا خیر
-                        if (synopsisEl.textContent.trim() === originalSynopsis.trim()) {
-                           textsToRetry.push(originalSynopsis);
-                        }
-
-                        // اگر متنی برای ترجمه مجدد وجود داشت و کلید API تنظیم شده بود
-                        if (textsToRetry.length > 0 && geminiApiKey) {
-                            try {
-                                await APIManager.batchTranslate(textsToRetry);
-
-                                // به‌روزرسانی متن‌ها از کش ترجمه
-                                if (translationCache.has(originalTitle)) {
-                                    titleEl.textContent = translationCache.get(originalTitle);
-                                }
-                                if (translationCache.has(originalSynopsis)) {
-                                    synopsisEl.textContent = translationCache.get(originalSynopsis);
-                                }
-                            } catch (error) {
-                                console.error("Error during re-translation check:", error);
-                            }
-                        }
-                    }, 10000); // تاخیر ۱۰ ثانیه‌ای
-                    // END: Added translation check logic
 
                 } catch (error) {
-                    DOMElements.detailsPage.innerHTML = `<button id="back-button" class="fixed top-6 right-6 bg-secondary/70 hover:bg-tertiary font-bold p-3 rounded-full z-20 shadow-lg">&larr;</button><div class="flex justify-center items-center min-h-screen"><p class="p-8 text-center text-red-400 text-xl font-bold">${error.message}</p></div>`;
+                    // --- *** اصلاح: مدیریت خطای 404/500 *** ---
+                    let friendlyError = error.message;
+                    if (friendlyError.includes('Jikan API error') && (friendlyError.includes('404') || friendlyError.includes('500') || friendlyError.toLowerCase().includes('not found'))) {
+                        friendlyError = "موردی برای نمایش یافت نشد (صفحه وجود ندارد).";
+                    }
+                    // --- *** پایان اصلاح *** ---
+                    DOMElements.detailsPage.innerHTML = `<button id="back-button" class="fixed top-6 right-6 bg-secondary/70 hover:bg-tertiary font-bold p-3 rounded-full z-20 shadow-lg">←</button><div class="flex justify-center items-center min-h-screen"><p class="p-8 text-center text-red-400 text-xl font-bold">${friendlyError}</p></div>`;
                     isTransitioning = false;
                 }
             },
-            async triggerTranslations(data) {
-                const elementsToTranslate = {
-                    '#persian-title': data.title_english || data.title,
-                    '#synopsis-text': data.synopsis || "No synopsis available.",
-                    '#rating-value': data.rating || '',
-                    '#source-value': data.source || '',
-                };
-                const genreSpans = document.querySelectorAll('#genre-container span');
-
-                // --- OFFLINE-FIRST TRANSLATION ---
-                for (const [selector, originalText] of Object.entries(elementsToTranslate)) {
-                    const el = document.querySelector(selector);
-                    if (el && originalText) {
-                        el.textContent = offlineTranslator.translate(originalText);
-                    }
-                }
-                genreSpans.forEach(span => {
-                    span.textContent = offlineTranslator.translate(span.textContent);
-                });
-
-                // --- API ENHANCEMENT (if available) ---
-                if (geminiApiKey) {
-                    const textsToBatch = [];
-                    // Only add texts to batch if they were NOT found in the offline dictionary
-                    for (const originalText of Object.values(elementsToTranslate)) {
-                        if (originalText && offlineTranslator.translate(originalText) === originalText) {
-                            textsToBatch.push(originalText);
-                        }
-                    }
-                    
-                    if (textsToBatch.length > 0) {
-                       await APIManager.batchTranslate(textsToBatch);
-                    }
-
-                    // Update from cache (which now contains API results)
-                    for (const [selector, originalText] of Object.entries(elementsToTranslate)) {
-                        const el = document.querySelector(selector);
-                        if (el && originalText && translationCache.has(originalText)) {
-                            el.textContent = translationCache.get(originalText);
-                        }
-                    }
-                }
-            },
+            
             renderDetailsBox(data) {
                 const detailsBox = document.getElementById('details-box');
                 if (!detailsBox) return;
@@ -745,25 +736,29 @@
 
                 detailsBox.innerHTML = `
                     <h3 class="font-bold text-lg mb-3">جزئیات</h3>
-                    <p class="mb-2"><strong>نوع:</strong> <span id="type-value">${data.type || 'نامشخص'}</span></p>
-                    <p class="mb-2"><strong>منبع اقتباس:</strong> <span id="source-value">${data.source || 'نامشخص'}</span></p>
-                    <p class="mb-2"><strong>وضعیت:</strong> <span id="status-value">${data.status || 'نامشخص'}</span></p>
+                    <p class="mb-2"><strong>نوع:</strong> <span id="type-value">${offlineTranslator.translate(data.type) || 'نامشخص'}</span></p>
+                    <p class="mb-2"><strong>منبع اقتباس:</strong> <span id="source-value">${offlineTranslator.translate(data.source) || 'نامشخص'}</span></p>
+                    <p class="mb-2"><strong>وضعیت:</strong> <span id="status-value">${offlineTranslator.translate(data.status) || 'نامشخص'}</span></p>
                     <p class="mb-2"><strong>قسمت‌ها:</strong> ${data.episodes || 'N/A'}</p>
-                    <p class="mb-2"><strong>رده سنی:</strong> <span id="rating-value">${data.rating || 'نامشخص'}</span></p>
+                    <p class="mb-2"><strong>رده سنی:</strong> <span id="rating-value">${offlineTranslator.translate(data.rating) || 'نامشخص'}</span></p>
                     <p class="mb-2"><strong>استودیو:</strong> ${studiosHTML}</p>
                     <p><strong>پخش:</strong> ${data.aired.from ? new Date(data.aired.from).toLocaleDateString('fa-IR') : 'نامشخص'}</p>
                 `;
-                
-                document.getElementById('type-value').textContent = offlineTranslator.translate(data.type);
-                document.getElementById('status-value').textContent = offlineTranslator.translate(data.status);
             },
             async renderLatestEpisode(animeId) {
                 const section = document.getElementById('latest-episode-section');
                 if (!section) return;
                 try {
-                    const result = await APIManager.fetchJikan(`anime/${animeId}/episodes`);
-                    const lastEpisode = result.data?.pop();
-                    if (lastEpisode) {
+                    const firstPageResult = await APIManager.fetchJikan(`anime/${animeId}/episodes`);
+                    const lastPage = firstPageResult.pagination?.last_visible_page;
+                    let lastEpisode = null;
+                    if (lastPage && lastPage > 1) {
+                        const lastPageResult = await APIManager.fetchJikan(`anime/${animeId}/episodes?page=${lastPage}`);
+                        lastEpisode = lastPageResult.data?.reverse().find(ep => ep) || null;
+                    } else if (firstPageResult.data?.length > 0) {
+                        lastEpisode = firstPageResult.data[firstPageResult.data.length - 1];
+                    }
+                    if (lastEpisode && lastEpisode.aired) {
                         section.innerHTML = `
                             <div class="bg-accent-primary/10 border border-accent-primary/30 p-4 rounded-lg">
                                 <h4 class="font-bold text-lg mb-2 accent-primary-text">آخرین قسمت پخش شده</h4>
@@ -771,13 +766,79 @@
                                 <p class="text-xs text-secondary mt-1">تاریخ پخش: ${new Date(lastEpisode.aired).toLocaleDateString('fa-IR')}</p>
                             </div>
                         `;
+                    } else {
+                        section.innerHTML = '';
                     }
-                } catch (error) { console.error("Failed to fetch latest episode:", error); }
+                } catch (error) { 
+                    console.error("Failed to fetch latest episode:", error); 
+                    section.innerHTML = '';
+                }
+            },
+            renderWatchOrderButton(data) {
+                const watchOrderBtn = document.getElementById('watch-order-btn');
+                if (!watchOrderBtn) return;
+                const complexFranchises = ['monogatari', 'fate/', 'toaru', 'gundam', 'evangelion', 'suzumiya haruhi', 'a certain scientific', 'a certain magical'];
+                const title = (data.title_english || data.title).toLowerCase();
+                const isComplex = complexFranchises.some(franchise => title.includes(franchise));
+                watchOrderBtn.classList.toggle('hidden', !isComplex);
+            },
+            async renderThemes(animeId) {
+                const section = document.getElementById('tab-content-music');
+                if (!section) return;
+                section.innerHTML = `<h3 class="font-bold text-xl mb-4">موسیقی متن</h3><div class="loader mx-auto"></div>`;
+                try {
+                    const result = await APIManager.fetchJikan(`anime/${animeId}/themes`);
+                    const { openings, endings } = result.data;
+                    if (!openings?.length && !endings?.length) {
+                        section.innerHTML = '';
+                        return;
+                    }
+                    const createThemeHTML = (themes) => {
+                        if (!themes || themes.length === 0) return '<li>موردی یافت نشد.</li>';
+                        const cleanThemeForSearch = (theme) => {
+                            if (!theme) return '';
+                            return theme
+                                .replace(/^#?\d*:\s*/, '')
+                                .replace(/\s*\(eps.*\)$/, '')
+                                .trim();
+                        };
+                        return themes.map(theme => {
+                            const cleanQuery = cleanThemeForSearch(theme);
+                            const escapedTheme = theme.replace(/"/g, '"');
+                            const escapedQuery = cleanQuery.replace(/"/g, '"');
+                            return `
+                                <li class="flex justify-between items-center bg-tertiary p-3 rounded-lg">
+                                    <span class="text-sm flex-1 truncate" title="${escapedTheme}">${theme}</span>
+                                    <button data-action="search-youtube" data-query="${escapedQuery}" class="flex-shrink-0 text-xs bg-secondary hover:bg-primary text-accent-primary font-bold py-1 px-2 rounded transition-colors">
+                                        جستجو در
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg>
+                                    </button>
+                                </li>
+                            `;
+                        }).join('');
+                    };
+                    const openingsHTML = createThemeHTML(openings);
+                    const endingsHTML = createThemeHTML(endings);
+                    section.innerHTML = `
+                        <h3 class="font-bold text-xl mb-4">موسیقی متن</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-bold text-lg mb-3 accent-primary-text">تیتراژهای آغازی (OP)</h4>
+                                <ul class="space-y-2">${openingsHTML}</ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-3 accent-secondary-text">تیتراژهای پایانی (ED)</h4>
+                                <ul class="space-y-2">${endingsHTML}</ul>
+                            </div>
+                        </div>`;
+                } catch (error) {
+                    console.error("Failed to fetch themes:", error);
+                    section.innerHTML = `<h3 class="font-bold text-xl mb-4">موسیقی متن</h3><p class="text-secondary">خطا در بارگذاری موسیقی متن.</p>`;
+                }
             },
             renderSubtitlesSection(data) {
                 const section = document.getElementById('subtitles-section');
                 if (!section || !data.aired?.from) return;
-
                 const airDate = new Date(data.aired.from);
                 if (airDate.getFullYear() >= 2025) {
                     section.innerHTML = `
@@ -798,22 +859,45 @@
                     `;
                 }
             },
+            
+            // --- *** این تابع اصلاح شده است *** ---
             renderRelations(relations) {
                 const section = document.getElementById('relations-section');
                 if (!section || !relations || relations.length === 0) return;
-
+                
                 const relationsHTML = relations.map(rel => {
-                    return rel.entry.map(entry => `
-                        <div class="result-card bg-tertiary p-3 rounded-lg flex items-center justify-between gap-4 cursor-pointer hover:bg-secondary/50 transition-colors" data-id="${entry.mal_id}">
+                    // بخش انیمه‌ها (قابل کلیک)
+                    const animeHTML = rel.entry.filter(entry => entry.type === 'anime').map(entry => `
+                        <div class="result-card bg-tertiary p-3 rounded-lg flex items-center justify-between gap-4 cursor-pointer hover:bg-secondary/50 transition-colors border border-transparent" data-id="${entry.mal_id}">
                             <div>
                                 <p class="font-bold text-sm">${entry.name}</p>
-                                <p class="text-xs text-secondary">${rel.relation}</p>
+                                <p class="text-xs text-secondary">${rel.relation} (انیمه)</p>
                             </div>
-                            <span class="text-lg">&larr;</span>
+                            <span class="text-lg">←</span>
                         </div>
                     `).join('');
+                    
+                    // بخش غیر انیمه‌ها (غیرقابل کلیک و ترجمه شده)
+                    const otherHTML = rel.entry.filter(entry => entry.type !== 'anime').map(entry => {
+                        // فرمت کردن نوع (مثلاً 'light_novel' به 'Light novel')
+                        const formattedType = entry.type.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+                        // ترجمه نوع
+                        const translatedType = offlineTranslator.translate(formattedType);
+                        
+                        return `
+                        <div class="bg-tertiary p-3 rounded-lg flex items-center justify-between gap-4 opacity-70 border border-transparent">
+                            <div>
+                                <p class="font-bold text-sm">${entry.name}</p>
+                                <p class="text-xs text-secondary">${rel.relation} (${translatedType})</p>
+                            </div>
+                            <span class="text-lg text-secondary">⇥</span>
+                        </div>
+                        `;
+                    }).join('');
+                    
+                    return animeHTML + otherHTML;
                 }).join('');
-
+                
                 if (relationsHTML) {
                     section.innerHTML = `
                         <h3 class="font-bold text-xl mb-4">انیمه‌های مرتبط</h3>
@@ -823,99 +907,88 @@
                     `;
                 }
             },
+            // --- *** پایان تابع اصلاح شده *** ---
+
             async renderVideos(animeId, mainTrailer) {
-                const section = document.getElementById('videos-section');
+                const section = document.getElementById('tab-content-trailers');
                 if (!section) return;
                 section.innerHTML = `<h3 class="font-bold text-xl mb-4">ویدیوها</h3><div class="loader mx-auto"></div>`;
                 try {
                     const result = await APIManager.fetchJikan(`anime/${animeId}/videos`);
                     const promos = result.data?.promo || [];
-                    let initialVideo = mainTrailer?.embed_url;
-                    if (!initialVideo && promos.length > 0) {
-                        initialVideo = promos[0].trailer.embed_url;
-                    }
-
-                    if (!initialVideo && promos.length === 0) {
-                        section.innerHTML = '';
-                        return;
-                    }
-                    
-                    if (initialVideo) {
-                        const url = new URL(initialVideo);
-                        url.searchParams.set('autoplay', '0');
-                        initialVideo = url.toString();
-                    }
-
-                    section.innerHTML = `
-                        <h3 class="font-bold text-xl mb-4">ویدیوها</h3>
-                        <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg border border-color mb-4">
-                            <iframe id="video-player" class="w-full h-full" src="${initialVideo || ''}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                        <div id="video-thumbnail-container" class="video-thumbnail-list"></div>
-                    `;
-
-                    const thumbnailContainer = document.getElementById('video-thumbnail-container');
-                    if (mainTrailer?.youtube_id) {
-                        const thumb = this.createVideoThumbnail(mainTrailer.embed_url, mainTrailer.images.medium_image_url, 'تریلر رسمی', initialVideo);
-                        thumbnailContainer.appendChild(thumb);
+                    const allVideos = [];
+                    if (mainTrailer?.embed_url) {
+                        allVideos.push({
+                            title: 'تریلر رسمی',
+                            embed_url: mainTrailer.embed_url
+                        });
                     }
                     promos.forEach(promo => {
-                        const thumb = this.createVideoThumbnail(promo.trailer.embed_url, promo.trailer.images.medium_image_url, promo.title, initialVideo);
-                        thumbnailContainer.appendChild(thumb);
+                        allVideos.push({
+                            title: promo.title,
+                            embed_url: promo.trailer.embed_url
+                        });
                     });
-
+                    if (allVideos.length === 0) {
+                        section.innerHTML = '<h3 class="font-bold text-xl mb-4">ویدیوها</h3><p class="text-secondary">ویدیویی برای نمایش یافت نشد.</p>';
+                        return;
+                    }
+                    let videosHTML = '';
+                    allVideos.forEach(video => {
+                        if (!video.embed_url) return;
+                        const url = new URL(video.embed_url);
+                        url.searchParams.set('autoplay', '0');
+                        const finalEmbedUrl = url.toString();
+                        videosHTML += `
+                            <div class="mb-6">
+                                <h4 class="font-bold text-lg mb-2 text-secondary">${video.title}</h4>
+                                <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg border border-color">
+                                    <iframe class="w-full h-full" src="${finalEmbedUrl}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    section.innerHTML = `
+                        <h3 class="font-bold text-xl mb-4">ویدیوها</h3>
+                        <div class="space-y-6">${videosHTML}</div>
+                    `;
                 } catch (error) {
                     console.error("Failed to fetch videos:", error);
-                    section.innerHTML = '<p class="text-secondary">ویدیویی برای نمایش یافت نشد.</p>';
+                    section.innerHTML = '<h3 class="font-bold text-xl mb-4">ویدیوها</h3><p class="text-secondary">خطا در بارگذاری ویدیوها.</p>';
                 }
             },
-            createVideoThumbnail(embedUrl, imageUrl, title, initialVideo) {
-                const url = new URL(embedUrl);
-                url.searchParams.set('autoplay', '0');
-                const nonAutoplayUrl = url.toString();
-
-                const thumbWrapper = document.createElement('div');
-                thumbWrapper.className = `video-thumbnail flex-shrink-0 w-40 rounded-lg overflow-hidden ${nonAutoplayUrl === initialVideo ? 'active' : ''}`;
-                thumbWrapper.innerHTML = `<img src="${imageUrl}" alt="${title}" class="w-full h-full object-cover">`;
-                thumbWrapper.addEventListener('click', () => {
-                    document.getElementById('video-player').src = nonAutoplayUrl;
-                    document.querySelectorAll('.video-thumbnail').forEach(t => t.classList.remove('active'));
-                    thumbWrapper.classList.add('active');
-                });
-                return thumbWrapper;
-            },
             async renderCharacters(animeId) {
-                const charactersSection = document.getElementById('characters-section');
+                const charactersSection = document.getElementById('tab-content-characters');
                 if (!charactersSection) return;
+                charactersSection.innerHTML = `<div class="loader mx-auto"></div>`;
                 try {
                     const result = await APIManager.fetchJikan(`anime/${animeId}/characters`);
                     if (currentAnimeData) {
                         currentAnimeData.fullCharacterList = result.data;
                     }
-                    const mainCharacters = result.data.filter(c => c.role === 'Main').slice(0, 6);
-                    if (mainCharacters.length === 0) {
-                        charactersSection.innerHTML = ''; return;
+                    const allCharacters = result.data;
+                    if (allCharacters.length === 0) {
+                        charactersSection.innerHTML = '<p class="text-secondary">شخصیتی یافت نشد.</p>';
+                        return;
                     }
                     charactersSection.innerHTML = `
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-xl">شخصیت‌های اصلی</h3>
-                            <button id="show-all-chars-btn" class="text-sm accent-primary-text hover:underline font-semibold">نمایش همه</button>
-                        </div>
                         <div id="character-cards-container" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            ${mainCharacters.map(this.createCharacterCard).join('')}
+                            ${allCharacters.map(this.createCharacterCard).join('')}
                         </div>`;
-                } catch (error) { charactersSection.innerHTML = ''; }
+                } catch (error) { 
+                    charactersSection.innerHTML = '<p class="text-secondary">خطا در بارگذاری شخصیت‌ها.</p>';
+                }
             },
             createCharacterCard(characterData) {
                 const character = characterData.character;
                 return `
                     <div class="bg-tertiary border border-color rounded-lg p-3 flex items-center gap-4 hover:border-accent-primary transition-colors">
-                        <img src="${character.images?.webp?.image_url || ''}" onerror="this.src='https://placehold.co/64x64/1A2233/939CB0?text=X'" class="w-16 h-16 rounded-full object-cover">
+                        <img src="${proxyImageUrl(character.images?.webp?.image_url)}" onerror="this.src='https://placehold.co/64x64/1A2233/939CB0?text=X'" class="w-16 h-16 rounded-full object-cover">
                         <div class="flex-grow">
                             <h4 class="font-bold">${character.name}</h4>
                             <p class="text-sm text-secondary">${characterData.role}</p>
                         </div>
-                        <button data-action="chat" data-character-name="${character.name}" class="gemini-button text-white text-xs font-bold py-2 px-3 rounded-full" disabled>✨ چت</button>
+                        <button data-action="chat" data-character-name="${character.name}" class="gemini-button text-white text-xs font-bold py-2 px-3 rounded-full">✨ چت</button>
                     </div>
                 `;
             },
@@ -930,8 +1003,8 @@
                         <h3 class="font-bold text-xl mb-4">انیمه‌های پیشنهادی</h3>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                             ${recommendations.map(rec => `
-                                <div class="result-card bg-tertiary p-2 rounded-lg text-center cursor-pointer group" data-id="${rec.entry.mal_id}">
-                                    <img src="${rec.entry.images?.webp?.large_image_url || ''}" onerror="this.src='https://placehold.co/150x210/1A2233/939CB0?text=X'" class="w-full h-auto rounded-md mb-2">
+                                <div class="result-card bg-tertiary p-2 rounded-lg text-center cursor-pointer group border border-transparent" data-id="${rec.entry.mal_id}">
+                                    <img src="${proxyImageUrl(rec.entry.images?.webp?.large_image_url)}" onerror="this.src='https://placehold.co/150x210/1A2233/939CB0?text=X'" class="w-full h-auto rounded-md mb-2">
                                     <p class="text-xs font-bold truncate group-hover:accent-primary-text transition-colors">${rec.entry.title}</p>
                                 </div>
                             `).join('')}
@@ -946,7 +1019,7 @@
                             <h3 class="text-2xl font-bold">${studioName}</h3>
                             <button id="analyze-studio-btn" class="gemini-button text-white text-sm font-bold py-2 px-4 rounded-full">✨ تحلیل استودیو</button>
                         </div>
-                        <button class="close-modal-btn p-2 text-2xl">&times;</button>
+                        <button class="close-modal-btn p-2 text-2xl">×</button>
                     </div>
                     <div class="p-6 overflow-y-auto max-h-[80vh]">
                         <div id="studio-analysis-container" class="mb-6"></div>
@@ -954,8 +1027,8 @@
                             <h4 class="font-bold text-xl mb-4">آثار برجسته</h4>
                             <div id="studio-works-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                 ${animeData.map(anime => `
-                                    <div class="result-card bg-tertiary p-2 rounded-lg text-center cursor-pointer group" data-id="${anime.mal_id}">
-                                        <img src="${anime.images?.webp?.large_image_url || 'https://placehold.co/150x210/1A2233/939CB0?text=X'}" onerror="this.src='https://placehold.co/150x210/1A2233/939CB0?text=X'" class="w-full h-auto rounded-md mb-2">
+                                    <div class="result-card bg-tertiary p-2 rounded-lg text-center cursor-pointer group border border-transparent" data-id="${anime.mal_id}">
+                                        <img src="${proxyImageUrl(anime.images?.webp?.large_image_url)}" onerror="this.src='https://placehold.co/150x210/1A2233/939CB0?text=X'" class="w-full h-auto rounded-md mb-2">
                                         <p class="text-xs font-bold truncate group-hover:accent-primary-text transition-colors">${anime.title}</p>
                                     </div>
                                 `).join('')}
@@ -969,50 +1042,117 @@
                     modalWrapper.studioName = studioName; 
                     modalWrapper.studioData = animeData;
                 }
-                App.updateAiFeatureVisibility();
             }
         };
 
         const App = {
+            
+            getFriendlyErrorMessage(error) {
+                const msg = error ? error.message.toLowerCase() : "";
+                if (msg.includes('429') || msg.includes('resource exhausted') || msg.includes('rate limit')) {
+                    return "ظرفیت API هوش مصنوعی در حال حاضر تکمیل است. لطفاً چند دقیقه دیگر دوباره امتحان کنید.";
+                }
+                if (msg.includes('prohibited_content')) {
+                    return "درخواست شما توسط فیلترهای ایمنی مسدود شد (محتوای ممنوعه).";
+                }
+                if (msg.includes('failed to fetch') || msg.includes('network')) {
+                    return "خطا در اتصال به شبکه. لطفاً اینترنت خود را بررسی کنید.";
+                }
+                // این پیغام سفارشی از بک‌اند می‌آید
+                if (msg.includes('translation failed')) {
+                    return "ترجمه ناموفق بود. (خطای داخلی سرور)";
+                }
+                // خطای Jikan (برای مودال‌ها)
+                if (msg.includes('jikan api error') && (msg.includes('404') || msg.includes('500') || msg.includes('not found'))) {
+                    return "موردی برای نمایش یافت نشد (صفحه وجود ندارد).";
+                }
+                return `خطا: ${error.message}`;
+            },
+
+            handlePathChange() {
+                const path = window.location.pathname;
+                const match = path.match(/\/anime\/(\d+)/);
+                
+                if (match && match[1]) {
+                    const id = match[1];
+                    UIManager.showDetailsPage(id);
+                } else {
+                    UIManager.showMainPage();
+                    let tabName = 'search';
+                    if (path === '/airing') {
+                        tabName = 'airing';
+                    } else if (path === '/top') {
+                        tabName = 'top';
+                    }
+                    this.renderTabContent(tabName);
+                }
+            },
+
+            renderTabContent(tabName) {
+                currentListType = tabName;
+                currentPage = 1;
+
+                document.querySelectorAll('.tab-button').forEach(t => {
+                    t.classList.remove('accent-primary-text');
+                    t.classList.add('text-secondary');
+                });
+                const activeTab = document.querySelector(`.tab-button[data-tab="${tabName}"]`);
+                if (activeTab) {
+                    activeTab.classList.add('accent-primary-text');
+                    activeTab.classList.remove('text-secondary');
+                }
+                
+                DOMElements.searchPage.classList.toggle('hidden', tabName !== 'search');
+                DOMElements.listPage.classList.toggle('hidden', tabName === 'search');
+                
+                DOMElements.resultsContainer.innerHTML = '';
+                DOMElements.smartResultsTitle.classList.add('hidden');
+                DOMElements.showMoreContainer.innerHTML = '';
+                
+                if (tabName === 'search') {
+                    DOMElements.seasonNav.classList.add('hidden');
+                    if (DOMElements.searchInput.value === '') {
+                        UIManager.showMessage('برای شروع، نام یک انیمه را جستجو کنید یا از منو انتخاب کنید.');
+                    }
+                } else {
+                    UIManager.showMessage('');
+                    if (tabName === 'top') {
+                        DOMElements.seasonNav.classList.add('hidden');
+                        DOMElements.listTitle.textContent = 'برترین‌های MAL';
+                        this.loadList(tabName, currentPage);
+                    } else if (tabName === 'airing') {
+                        DOMElements.seasonNav.classList.remove('hidden');
+                        DOMElements.listTitle.textContent = 'انیمه‌های در حال پخش';
+                        this.loadList(tabName, currentPage);
+                    }
+                }
+            },
+            
             init() {
-                this.loadApiKey();
-                this.updateAiFeatureVisibility();
                 this.setupEventListeners();
                 this.applySavedTheme();
                 this.initSeason();
-                UIManager.showMessage('برای شروع، نام یک انیمه را جستجو کنید یا از منو انتخاب کنید.');
+                this.handlePathChange();
             },
-            loadApiKey() {
-                geminiApiKey = localStorage.getItem('geminiApiKey');
-            },
-            updateAiFeatureVisibility() {
-                const isAiEnabled = !!geminiApiKey;
-                document.querySelectorAll('.gemini-button, [data-action="chat"], #find-similar-btn, #analyze-studio-btn').forEach(btn => {
-                    btn.disabled = !isAiEnabled;
-                });
-
-                if (isAiEnabled) {
-                    DOMElements.apiKeyBtnText.textContent = "API تنظیم شده";
-                    DOMElements.apiKeyBtn.classList.add('accent-primary-text');
-                } else {
-                    DOMElements.apiKeyBtnText.textContent = "تنظیم API";
-                    DOMElements.apiKeyBtn.classList.remove('accent-primary-text');
+            
+            navigateToDetails(id) {
+                const newPath = `/anime/${id}`;
+                if (window.location.pathname !== newPath) {
+                    history.pushState({ path: newPath }, null, newPath);
                 }
-            },
-            navigateToDetails(id, isNewChain = false) {
-                if (isNewChain) navigationHistory = [];
-                if (navigationHistory[navigationHistory.length - 1] !== id) navigationHistory.push(id);
                 UIManager.showDetailsPage(id);
             },
+            
             navigateBack() {
-                navigationHistory.pop();
-                if (navigationHistory.length > 0) {
-                    UIManager.showDetailsPage(navigationHistory[navigationHistory.length - 1]);
-                } else {
-                    UIManager.showMainPage();
-                }
+                history.back();
             },
+
             setupEventListeners() {
+                
+                window.addEventListener('popstate', (event) => {
+                    this.handlePathChange();
+                });
+
                 DOMElements.searchForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     this.handleSearch(DOMElements.searchInput.value.trim());
@@ -1021,9 +1161,7 @@
                     clearTimeout(searchDebounceTimeout);
                     const query = e.target.value.trim();
                     if (query.length > 2) {
-                        // START: Increased debounce timeout to reduce API calls
                         searchDebounceTimeout = setTimeout(() => this.handleSearch(query), 600);
-                        // END: Increased debounce timeout
                     } else if (query.length === 0) {
                         DOMElements.resultsContainer.innerHTML = '';
                         DOMElements.smartResultsTitle.classList.add('hidden');
@@ -1036,13 +1174,29 @@
                     this.applyTheme(newTheme);
                 });
 
-                // Master Click Handler using Event Delegation
                 document.body.addEventListener('click', (e) => {
                     const target = e.target;
                     
+                    const tabNavButton = target.closest('.tab-nav-button');
+                    if (tabNavButton) {
+                        e.preventDefault();
+                        const targetSelector = tabNavButton.dataset.tabTarget;
+                        const targetContent = document.querySelector(targetSelector);
+                        if (targetContent) {
+                            document.querySelectorAll('.tab-nav-button').forEach(btn => btn.classList.remove('active'));
+                            document.querySelectorAll('.tab-content').forEach(pane => pane.classList.add('hidden'));
+                            tabNavButton.classList.add('active');
+                            targetContent.classList.remove('hidden');
+                        }
+                        return;
+                    }
+
                     const cardTarget = target.closest('.result-card[data-id]');
                     if (cardTarget) {
-                        this.navigateToDetails(cardTarget.dataset.id, true);
+                        if (target.closest('#modal-container')) {
+                            ModalManager.closeAll();
+                        }
+                        this.navigateToDetails(cardTarget.dataset.id);
                         return;
                     }
                     
@@ -1051,8 +1205,13 @@
                         const action = buttonTarget.dataset.action;
                         const tab = buttonTarget.dataset.tab;
 
-                        if (action === 'chat' && !buttonTarget.disabled) {
+                        if (action === 'chat') { 
                             this.handleCharacterChat(buttonTarget.dataset.characterName);
+                            return;
+                        }
+                        if (action === 'search-youtube') {
+                            const query = buttonTarget.dataset.query;
+                            window.open(`https://www.youtube.com/results?search_query=$${encodeURIComponent(query)}`, '_blank');
                             return;
                         }
                         if (tab) {
@@ -1060,33 +1219,33 @@
                             return;
                         }
 
-                        if (!buttonTarget.disabled) {
-                            switch (buttonTarget.id) {
-                                case 'smart-suggest-btn': this.handleSmartSuggest(); break;
-                                case 'api-key-btn': this.handleSetApiKey(); break;
-                                case 'menu-toggle-btn': DOMElements.mainMenu.classList.toggle('hidden'); break;
-                                case 'prev-season-btn': this.changeSeason(-1); break;
-                                case 'next-season-btn': this.changeSeason(1); break;
-                                case 'back-button': this.navigateBack(); break;
-                                case 'smart-analysis-btn': this.handleSmartAnalysis(); break;
-                                case 'find-similar-btn': this.handleFindSimilar(); break;
-                                case 'show-all-chars-btn':
-                                    if (currentAnimeData?.fullCharacterList) {
-                                        this.handleShowAllCharacters(currentAnimeData.fullCharacterList);
-                                    }
-                                    break;
-                                case 'telegram-modal-btn': this.handleTelegramModal(); break;
-                                case 'analyze-studio-btn':
-                                    const modal = document.getElementById('studio-modal');
-                                    if (modal && modal.studioName && modal.studioData) {
-                                        this.handleStudioAnalysis(modal.studioName, modal.studioData);
-                                    }
-                                    break;
-                                case 'show-more-btn':
-                                    currentPage++;
-                                    this.loadList(currentListType, currentPage, true);
-                                    break;
-                            }
+                        switch (buttonTarget.id) {
+                            case 'smart-suggest-btn': this.handleSmartSuggest(); break;
+                            case 'menu-toggle-btn': DOMElements.mainMenu.classList.toggle('hidden'); break;
+                            case 'prev-season-btn': this.changeSeason(-1); break;
+                            case 'next-season-btn': this.changeSeason(1); break;
+                            case 'back-button': this.navigateBack(); break;
+                            case 'smart-analysis-btn': this.handleSmartAnalysis(); break;
+                            case 'find-similar-btn': this.handleFindSimilar(); break;
+                            case 'watch-order-btn': this.handleWatchOrder(); break;
+                            case 'telegram-modal-btn': this.handleTelegramInfoModal(); break;
+                            case 'telegram-bot-btn': this.handleTelegramBotModal(); break;
+                            case 'analyze-studio-btn':
+                                const modal = document.getElementById('studio-modal');
+                                if (modal && modal.studioName && modal.studioData) {
+                                    this.handleStudioAnalysis(modal.studioName, modal.studioData);
+                                }
+                                break;
+                            case 'show-more-btn':
+                                currentPage++;
+                                this.loadList(currentListType, currentPage, true);
+                                break;
+                            case 'force-refresh-btn':
+                                if (currentAnimeData) {
+                                    ModalManager.showNotification("در حال ترجمه مجدد...", "info");
+                                    UIManager.showDetailsPage(currentAnimeData.mal_id, true);
+                                }
+                                break;
                         }
                     }
 
@@ -1145,46 +1304,29 @@
                         UIManager.displayResults(result.data, `نتایج برای «${persianQuery}»`);
                     }
                 } catch (error) {
-                    UIManager.showMessage(error.message, true);
+                    UIManager.showMessage(this.getFriendlyErrorMessage(error), true);
                 } finally {
                     UIManager.showLoader(false);
                 }
             },
+
             handleTabClick(tab) {
                 const tabName = tab.dataset.tab;
-                currentListType = tabName;
-                currentPage = 1;
+                
+                UIManager.showMainPage();
 
-                document.querySelectorAll('.tab-button').forEach(t => {
-                    t.classList.remove('accent-primary-text');
-                    t.classList.add('text-secondary');
-                });
-                tab.classList.add('accent-primary-text');
-                tab.classList.remove('text-secondary');
+                let newPath = '/';
+                if (tabName === 'airing') newPath = '/airing';
+                else if (tabName === 'top') newPath = '/top';
                 
-                DOMElements.searchPage.classList.toggle('hidden', tabName !== 'search');
-                DOMElements.listPage.classList.toggle('hidden', tabName === 'search');
-                
-                DOMElements.resultsContainer.innerHTML = '';
-                DOMElements.smartResultsTitle.classList.add('hidden');
-                DOMElements.showMoreContainer.innerHTML = '';
-                
-                if (tabName === 'search') {
-                     UIManager.showMessage('برای شروع، نام یک انیمه را جستجو کنید یا از منو انتخاب کنید.');
-                } else {
-                    UIManager.showMessage('');
-                    if (tabName === 'top') {
-                        DOMElements.seasonNav.classList.add('hidden');
-                        DOMElements.listTitle.textContent = 'برترین‌های MAL';
-                        this.loadList(tabName, currentPage);
-                    } else if (tabName === 'airing') {
-                        DOMElements.seasonNav.classList.remove('hidden');
-                        DOMElements.listTitle.textContent = 'انیمه‌های در حال پخش';
-                        this.loadList(tabName, currentPage);
-                    }
+                if (window.location.pathname !== newPath) {
+                    history.pushState({ path: newPath }, null, newPath);
                 }
+                
+                this.renderTabContent(tabName);
                 DOMElements.mainMenu.classList.add('hidden');
             },
+
             async loadList(type, page, append = false) {
                 UIManager.showLoader(true);
                 if (!append) {
@@ -1217,10 +1359,10 @@
                 const date = new Date();
                 const year = date.getFullYear();
                 const month = date.getMonth();
-                let season = 'winter'; // Dec, Jan, Feb
-                if (month >= 2 && month <= 4) season = 'spring'; // Mar, Apr, May
-                if (month >= 5 && month <= 7) season = 'summer'; // Jun, Jul, Aug
-                if (month >= 8 && month <= 10) season = 'fall'; // Sep, Oct, Nov
+                let season = 'winter';
+                if (month >= 2 && month <= 4) season = 'spring';
+                if (month >= 5 && month <= 7) season = 'summer';
+                if (month >= 8 && month <= 10) season = 'fall';
                 currentSeasonState = { year, season };
             },
             changeSeason(direction) {
@@ -1241,59 +1383,12 @@
             applySavedTheme() {
                 this.applyTheme(localStorage.getItem('theme') || 'dark');
             },
-
-            handleSetApiKey() {
-                const modalContent = `
-                    <div class="p-4 border-b border-color flex justify-between items-center">
-                        <h3 class="text-xl font-bold">🔑 تنظیم کلید API جمنای</h3>
-                        <button class="close-modal-btn p-2 text-2xl">&times;</button>
-                    </div>
-                    <div class="p-6 text-sm text-secondary leading-relaxed">
-                        <p class="mb-4">برای استفاده از امکانات هوشمند (ترجمه و تحلیل)، به کلید API از Google Gemini نیاز دارید.</p>
-                        <h4 class="font-bold text-primary mb-2">چگونه کلید API دریافت کنیم؟</h4>
-                        <ol class="list-decimal list-inside mb-4 space-y-2">
-                            <li>به سایت <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="accent-primary-text hover:underline">Google AI Studio</a> بروید.</li>
-                            <li>با حساب گوگل خود وارد شوید و روی "Create API key" کلیک کنید.</li>
-                            <li>کلید ساخته شده را کپی و در کادر زیر قرار دهید.</li>
-                        </ol>
-                        <p class="mb-4 text-xs">این کلید فقط در مرورگر شما ذخیره می‌شود.</p>
-                        <input id="api-key-input" type="password" class="bg-tertiary w-full p-3 rounded-lg border-2 border-color focus:border-accent-primary focus:outline-none" placeholder="کلید API خود را اینجا وارد کنید..." value="${geminiApiKey || ''}">
-                        <p id="api-key-error" class="text-red-400 text-xs mt-2 h-4"></p>
-                        <button id="api-key-save-btn" class="w-full mt-2 accent-primary-bg text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">ذخیره و فعال‌سازی</button>
-                    </div>
-                `;
-                const modal = ModalManager.create('api-key-modal', modalContent, {maxWidth: 'max-w-2xl'});
-                const input = modal.querySelector('#api-key-input');
-                const saveBtn = modal.querySelector('#api-key-save-btn');
-                const errorP = modal.querySelector('#api-key-error');
-
-                saveBtn.addEventListener('click', async () => {
-                    const key = input.value.trim();
-                    if (!key) {
-                        localStorage.removeItem('geminiApiKey');
-                        ModalManager.showNotification('کلید API حذف شد.', 'info');
-                        setTimeout(() => location.reload(), 2000);
-                        return;
-                    }
-                    saveBtn.disabled = true;
-                    saveBtn.textContent = 'در حال بررسی...';
-                    errorP.textContent = '';
-                    if (await APIManager.validateApiKey(key)) {
-                        localStorage.setItem('geminiApiKey', key);
-                        ModalManager.showNotification('کلید API با موفقیت ذخیره شد.', 'success');
-                        setTimeout(() => location.reload(), 2000);
-                    } else {
-                        errorP.textContent = 'کلید API وارد شده نامعتبر است.';
-                        saveBtn.disabled = false;
-                        saveBtn.textContent = 'ذخیره و فعال‌سازی';
-                    }
-                });
-            },
-            handleSmartSuggest() {
+            
+            async handleSmartSuggest() {
                 const modalContent = `
                     <div class="p-4 border-b border-color flex justify-between items-center">
                         <h3 class="text-xl font-bold">✨ پیشنهاد مفهومی</h3>
-                        <button class="close-modal-btn p-2 text-2xl">&times;</button>
+                        <button class="close-modal-btn p-2 text-2xl">×</button>
                     </div>
                     <div class="p-6">
                         <p class="text-secondary mb-4">توضیح دهید دنبال چه نوع انیمه‌ای هستید. مثلا: "یک انیمه ماجراجویی با داستانی حماسی"</p>
@@ -1330,30 +1425,17 @@
                         
                         UIManager.displayResults(animeDataResults, `✨ پیشنهادهای هوشمند برای: "${userInput}"`);
                     } catch (error) {
-                        UIManager.showMessage(`خطا: ${error.message}`, true);
+                        UIManager.showMessage(this.getFriendlyErrorMessage(error), true);
                     } finally {
                         UIManager.showLoader(false);
                     }
                 });
             },
-            handleShowAllCharacters(allCharacters) {
-                const modalContent = `
-                    <div class="p-4 border-b border-color flex justify-between items-center">
-                        <h3 class="text-xl font-bold">تمام شخصیت‌ها</h3>
-                        <button class="close-modal-btn p-2 text-2xl">&times;</button>
-                    </div>
-                    <div id="all-chars-list" class="p-4 overflow-y-auto space-y-3 max-h-[70vh]">
-                        ${allCharacters.map(UIManager.createCharacterCard).join('')}
-                    </div>
-                `;
-                ModalManager.create('all-characters-modal', modalContent, { maxWidth: 'max-w-3xl' });
-                this.updateAiFeatureVisibility(); 
-            },
-            handleTelegramModal() {
+            handleTelegramInfoModal() {
                 const modalContent = `
                     <div class="p-4 border-b border-color flex justify-between items-center">
                         <h3 class="text-xl font-bold">📢 توجه</h3>
-                        <button class="close-modal-btn p-2 text-2xl">&times;</button>
+                        <button class="close-modal-btn p-2 text-2xl">×</button>
                     </div>
                     <div class="p-6 text-center">
                         <p class="text-secondary mb-6">اگر زیرنویسی از انیمه مورد نظرتان پیدا نکردید از طريق گروه چت اعلام کنید و در کوتاه ترین زمان ممکن قرار خواهد گرفت.</p>
@@ -1362,6 +1444,20 @@
                 `;
                 ModalManager.create('telegram-info-modal', modalContent);
             },
+            handleTelegramBotModal() {
+                const modalContent = `
+                    <div class="p-4 border-b border-color flex justify-between items-center">
+                        <h3 class="text-xl font-bold">🤖 درباره ربات تلگرام Aniran</h3>
+                        <button class="close-modal-btn p-2 text-2xl">×</button>
+                    </div>
+                    <div class="p-6 text-center">
+                        <p class="text-secondary mb-6 leading-relaxed">ربات تلگرام Aniran به شما این امکان را می‌دهد که با ارسال عکس از هر صحنه انیمه، اطلاعات کامل آن را به همراه ویدیو، لیست شخصیت‌ها و انیمه‌های مشابه دریافت کنید. همچنین دارای قابلیت‌های جستجوی متنی پیشرفته است.</p>
+                        <a href="https://t.me/AnimeChatAbolfazl_Bot" target="_blank" rel="noopener noreferrer" class="block w-full text-center accent-primary-bg text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">ورود به ربات تلگرام</a>
+                    </div>
+                `;
+                ModalManager.create('telegram-bot-info-modal', modalContent);
+                DOMElements.mainMenu.classList.add('hidden');
+            },
             async handleCharacterChat(characterName) {
                 if (!currentAnimeData) return;
                 const animeTitle = currentAnimeData.title_english || currentAnimeData.title;
@@ -1369,7 +1465,7 @@
                 const modal = ModalManager.create('character-chat-modal', `
                     <div class="p-4 border-b border-color flex justify-between items-center">
                         <h3 class="text-xl font-bold">✨ گفتگو با ${characterName}</h3>
-                        <button class="close-modal-btn p-2 text-2xl">&times;</button>
+                        <button class="close-modal-btn p-2 text-2xl">×</button>
                     </div>
                     <div id="chat-messages" class="p-4 flex-grow overflow-y-auto h-96 flex flex-col gap-4">
                          <div class="chat-bubble chat-bubble-bot">سلام! من ${characterName} هستم. چه سوالی داری؟</div>
@@ -1402,7 +1498,8 @@
                         chatHistory.push({ role: "model", parts: [{ text: botResponse }] });
                         chatMessages.innerHTML += `<div class="chat-bubble chat-bubble-bot">${botResponse}</div>`;
                     } catch (error) {
-                        chatMessages.innerHTML += `<div class="chat-bubble chat-bubble-bot text-red-400">متاسفانه مشکلی پیش آمد: ${error.message}</div>`;
+                        const friendlyError = this.getFriendlyErrorMessage(error);
+                        chatMessages.innerHTML += `<div class="chat-bubble chat-bubble-bot text-red-400">${friendlyError}</div>`;
                     } finally {
                         submitButton.disabled = false;
                         submitButton.textContent = 'ارسال';
@@ -1415,7 +1512,7 @@
                 const modal = ModalManager.create('smart-analysis-modal', `
                     <div class="p-4 border-b border-color flex justify-between items-center">
                         <h3 class="text-xl font-bold">✨ تحلیل هوشمند</h3>
-                        <button class="close-modal-btn p-2 text-2xl">&times;</button>
+                        <button class="close-modal-btn p-2 text-2xl">×</button>
                     </div>
                     <div class="p-8 text-center"><div class="loader mx-auto"></div><p class="mt-4 text-secondary">در حال تحلیل با هوش مصنوعی...</p></div>`, {maxWidth: 'max-w-3xl'});
 
@@ -1427,7 +1524,7 @@
                     modal.innerHTML = `
                         <div class="p-4 border-b border-color flex justify-between items-center">
                             <h3 class="text-xl font-bold">✨ تحلیل هوشمند: ${title}</h3>
-                            <button class="close-modal-btn p-2 text-2xl">&times;</button>
+                            <button class="close-modal-btn p-2 text-2xl">×</button>
                         </div>
                         <div class="p-6 overflow-y-auto max-h-[70vh] space-y-6">
                             <div>
@@ -1450,7 +1547,8 @@
                             </div>
                         </div>`;
                 } catch (error) {
-                    modal.querySelector('.p-8').innerHTML = `<p class="p-4 text-center text-red-400">خطا در تحلیل: ${error.message}</p>`;
+                    const friendlyError = this.getFriendlyErrorMessage(error);
+                    modal.querySelector('.p-8').innerHTML = `<p class="p-4 text-center text-red-400">${friendlyError}</p>`;
                 }
             },
             async handleFindSimilar() {
@@ -1458,7 +1556,7 @@
                 const modal = ModalManager.create('similar-anime-modal', `
                     <div class="p-4 border-b border-color flex justify-between items-center">
                         <h3 class="text-xl font-bold">✨ یافتن انیمه‌های مشابه</h3>
-                        <button class="close-modal-btn p-2 text-2xl">&times;</button>
+                        <button class="close-modal-btn p-2 text-2xl">×</button>
                     </div>
                     <div class="p-8 text-center"><div class="loader mx-auto"></div><p class="mt-4 text-secondary">در حال یافتن پیشنهادها...</p></div>`, {maxWidth: 'max-w-4xl'});
 
@@ -1476,7 +1574,7 @@
                             if (animeInfo) {
                                 resultsHTML += `
                                     <div class="result-card bg-tertiary border border-color rounded-lg p-4 flex items-start gap-4 cursor-pointer hover:bg-secondary transition-colors" data-id="${animeInfo.mal_id}">
-                                        <img src="${animeInfo.images.webp.image_url}" class="w-20 h-auto rounded-md flex-shrink-0">
+                                        <img src="${proxyImageUrl(animeInfo.images.webp.image_url)}" class="w-20 h-auto rounded-md flex-shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/80x113/1A2233/939CB0?text=X';">
                                         <div class="flex-grow">
                                             <h4 class="font-bold text-lg">${animeInfo.title}</h4>
                                             <p class="text-sm text-secondary mt-1">${rec.reason}</p>
@@ -1488,25 +1586,43 @@
                     modal.innerHTML = `
                         <div class="p-4 border-b border-color flex justify-between items-center">
                             <h3 class="text-xl font-bold">✨ پیشنهادهای مشابه برای ${title}</h3>
-                            <button class="close-modal-btn p-2 text-2xl">&times;</button>
+                            <button class="close-modal-btn p-2 text-2xl">×</button>
                         </div>
                         <div id="similar-results-container" class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto max-h-[70vh]">${resultsHTML}</div>`;
                 } catch (error) {
-                     modal.querySelector('.p-8').innerHTML = `<p class="p-4 text-center text-red-400">خطا: ${error.message}</p>`;
+                    const friendlyError = this.getFriendlyErrorMessage(error);
+                    modal.querySelector('.p-8').innerHTML = `<p class="p-4 text-center text-red-400">${friendlyError}</p>`;
                 }
             },
             async handleStudioClick(studioId, studioName) {
                 const modal = ModalManager.create('studio-modal', `
                     <div class="p-4 border-b border-color flex justify-between items-center">
                         <h3 class="text-xl font-bold">اطلاعات استودیو</h3>
-                        <button class="close-modal-btn p-2 text-2xl">&times;</button>
+                        <button class="close-modal-btn p-2 text-2xl">×</button>
                     </div>
                     <div class="p-8 text-center"><div class="loader mx-auto"></div><p class="mt-4 text-secondary">در حال دریافت آثار استودیو ${studioName}...</p></div>
                 `, { maxWidth: 'max-w-4xl' });
 
                 try {
-                    const result = await APIManager.fetchJikan(`anime?producers=${studioId}&limit=24`);
-                    UIManager.populateStudioModal(modal, studioName, result.data);
+                    let allAnime = [];
+                    let page = 1;
+                    let hasNextPage = true;
+
+                    while(hasNextPage) {
+                        console.log(`Fetching studio works page ${page}...`);
+                        const result = await APIManager.fetchJikan(`anime?producers=${studioId}&page=${page}`);
+                        if (result.data && result.data.length > 0) {
+                            allAnime.push(...result.data);
+                        }
+                        hasNextPage = result.pagination?.has_next_page || false;
+                        page++;
+                        await delay(350);
+                    }
+                    
+                    const sortedData = allAnime.sort((a, b) => (b.members || 0) - (a.members || 0));
+                    
+                    UIManager.populateStudioModal(modal, studioName, sortedData);
+
                 } catch (error) {
                     ModalManager.close('studio-modal');
                     UIManager.showMessage(`خطا در دریافت اطلاعات استودیو: ${error.message}`, true);
@@ -1547,8 +1663,53 @@
                         </div>
                     `;
                 } catch (error) {
-                    analysisContainer.innerHTML = `<p class="p-4 text-center text-red-400">خطا در تحلیل استودیو: ${error.message}</p>`;
+                    const friendlyError = this.getFriendlyErrorMessage(error);
+                    analysisContainer.innerHTML = `<p class="p-4 text-center text-red-400">${friendlyError}</p>`;
                     if(analyzeBtn) analyzeBtn.disabled = false;
+                }
+            },
+            async handleWatchOrder() {
+                if (!currentAnimeData) return;
+                const title = currentAnimeData.title_english || currentAnimeData.title;
+                const modal = ModalManager.create('watch-order-modal', `
+                    <div class="p-4 border-b border-color flex justify-between items-center">
+                        <h3 class="text-xl font-bold">📜 ترتیب تماشای ${title}</h3>
+                        <button class="close-modal-btn p-2 text-2xl">×</button>
+                    </div>
+                    <div class="p-8 text-center"><div class="loader mx-auto"></div><p class="mt-4 text-secondary">در حال تولید ترتیب تماشا با هوش مصنوعی...</p></div>`, {maxWidth: 'max-w-3xl'});
+
+                try {
+                    const prompt = `Generate the recommended watch order for the "${title}" anime franchise. Provide a detailed, step-by-step list. Your response MUST be in Persian. Return a JSON object with a key "watchOrder", which is an array of objects. Each object MUST have "title" (the anime title), "mal_id" (the MyAnimeList ID as a number), "type" (e.g., "سریال تلویزیونی", "فیلم سینMایی"), and "note" (a brief explanation in Persian for why it's in this position). Provide ONLY the JSON.`;
+                    const result = await APIManager.callGemini(prompt, true);
+                    
+                    if (!result.watchOrder || result.watchOrder.length === 0) {
+                        throw new Error("پاسخ معتبری از هوش مصنوعی دریافت نشد.");
+                    }
+
+                    const orderHTML = result.watchOrder.map((item, index) => `
+                        <li class="result-card p-4 bg-tertiary rounded-lg border border-color transition-colors hover:border-accent-primary" data-id="${item.mal_id || 0}" style="cursor: pointer;">
+                            <div class="flex items-start gap-4">
+                                <span class="flex-shrink-0 text-2xl font-bold accent-primary-text">${index + 1}</span>
+                                <div>
+                                    <h4 class="font-bold text-lg">${item.title} <span class="text-xs font-normal bg-secondary px-2 py-1 rounded-full">${item.type}</span></h4>
+                                    <p class="text-sm text-secondary mt-1">${item.note}</p>
+                                </div>
+                            </div>
+                        </li>
+                    `).join('');
+
+                    modal.innerHTML = `
+                        <div class="p-4 border-b border-color flex justify-between items-center">
+                            <h3 class="text-xl font-bold">📜 ترتیب تماشای ${title}</h3>
+                            <button class="close-modal-btn p-2 text-2xl">×</button>
+                        </div>
+                        <div class="p-6 overflow-y-auto max-h-[70vh]">
+                            <ol class="space-y-4">${orderHTML}</ol>
+                        </div>`;
+
+                } catch (error) {
+                    const friendlyError = this.getFriendlyErrorMessage(error);
+                    modal.querySelector('.p-8').innerHTML = `<p class="p-4 text-center text-red-400">${friendlyError}</p>`;
                 }
             }
         };
